@@ -1,5 +1,27 @@
 This folder contains lint scripts.
 
+Running locally
+===============
+
+To run linters locally with the same versions as the CI environment, use the included
+Dockerfile:
+
+```sh
+DOCKER_BUILDKIT=1 docker build -t bitcoin-linter --file "./ci/lint_imagefile" ./ && docker run --rm -v $(pwd):/bitcoin -it bitcoin-linter
+```
+
+Building the container can be done every time, because it is fast when the
+result is cached and it prevents issues when the image changes.
+
+test runner
+===========
+
+To run the checks in the test runner outside the docker, use:
+
+```sh
+( cd ./test/lint/test_runner/ && cargo fmt && cargo clippy && cargo run )
+```
+
 check-doc.py
 ============
 Check for missing documentation of command line options.

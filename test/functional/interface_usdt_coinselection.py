@@ -97,6 +97,9 @@ int trace_aps_create_tx(struct pt_regs *ctx) {
 
 
 class CoinSelectionTracepointTest(BitcoinTestFramework):
+    def add_options(self, parser):
+        self.add_wallet_options(parser)
+
     def set_test_params(self):
         self.num_nodes = 1
         self.setup_clean_chain = True
@@ -163,7 +166,7 @@ class CoinSelectionTracepointTest(BitcoinTestFramework):
         ctx.enable_probe(probe="coin_selection:normal_create_tx_internal", fn_name="trace_normal_create_tx")
         ctx.enable_probe(probe="coin_selection:attempting_aps_create_tx", fn_name="trace_attempt_aps")
         ctx.enable_probe(probe="coin_selection:aps_create_tx_internal", fn_name="trace_aps_create_tx")
-        self.bpf = BPF(text=coinselection_tracepoints_program, usdt_contexts=[ctx], debug=0)
+        self.bpf = BPF(text=coinselection_tracepoints_program, usdt_contexts=[ctx], debug=0, cflags=["-Wno-error=implicit-function-declaration"])
 
         self.log.info("Prepare wallets")
         self.generate(self.nodes[0], 101)
